@@ -36,47 +36,61 @@ class _TodoListScreenState extends State<TodoListScreen> {
         child: Column(
           children: [
             Expanded(
-                child: Consumer<TodoProvider>(builder: (context, value, child) {
-              return value.todoList.isEmpty
-                  ? Center(
-                      child: Lottie.asset('assets/Animation - empty list.json',
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          height: MediaQuery.of(context).size.height * 0.7),
-                    )
-                  : ListView.builder(
-                      itemCount: value.todoList.length,
-                      itemBuilder: (context, index) {
-                        final data = value.todoList.length - index - 1;
-                        final todo = value.todoList[data];
-                        return Card(
-                          child: ListTile(
-                            leading: CircleAvatar(child: Text('${index + 1}')),
-                            title: Text(todo.title.toString()),
-                            subtitle: Text(todo.description.toString()),
-                            trailing: PopupMenuButton(onSelected: (value) {
-                              if (value == 'edit') {
-                                updateAlertBox(
-                                    context,
-                                    todo.id,
-                                    todo.title.toString(),
-                                    todo.description.toString());
-                              } else if (value == 'delete') {
-                                Provider.of<TodoProvider>(context,
-                                        listen: false)
-                                    .deleteTodo(todo.id.toString());
-                              }
-                            }, itemBuilder: (context) {
-                              return [
-                                const PopupMenuItem(
-                                    child: Text('EDIT'), value: 'edit'),
-                                const PopupMenuItem(
-                                    child: Text('DELETE'), value: 'delete')
-                              ];
-                            }),
-                          ),
-                        );
-                      });
-            }))
+              child: Consumer<TodoProvider>(
+                builder: (context, value, child) {
+                  return value.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : value.todoList.isEmpty
+                          ? Center(
+                              child: Lottie.asset(
+                                  'assets/Animation - empty list.json',
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7),
+                            )
+                          : ListView.builder(
+                              itemCount: value.todoList.length,
+                              itemBuilder: (context, index) {
+                                final data = value.todoList.length - index - 1;
+                                final todo = value.todoList[data];
+                                return Card(
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                        child: Text('${index + 1}')),
+                                    title: Text(todo.title.toString()),
+                                    subtitle: Text(todo.description.toString()),
+                                    trailing:
+                                        PopupMenuButton(onSelected: (value) {
+                                      if (value == 'edit') {
+                                        updateAlertBox(
+                                            context,
+                                            todo.id,
+                                            todo.title.toString(),
+                                            todo.description.toString());
+                                      } else if (value == 'delete') {
+                                        Provider.of<TodoProvider>(context,
+                                                listen: false)
+                                            .deleteTodo(todo.id.toString());
+                                      }
+                                    }, itemBuilder: (context) {
+                                      return [
+                                        const PopupMenuItem(
+                                            child: Text('EDIT'), value: 'edit'),
+                                        const PopupMenuItem(
+                                            child: Text('DELETE'),
+                                            value: 'delete')
+                                      ];
+                                    }),
+                                  ),
+                                );
+                              },
+                            );
+                },
+              ),
+            ),
           ],
         ),
       ),
