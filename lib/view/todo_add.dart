@@ -34,8 +34,7 @@ class AddTodoScreen extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 todoProvider.addTodo();
-                todoProvider.titleAddController.clear();
-                todoProvider.descriptionAddController.clear();
+
                 Navigator.pop(context);
               },
               child: const Text('SUBMIT'))

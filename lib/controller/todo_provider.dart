@@ -8,16 +8,20 @@ class TodoProvider extends ChangeNotifier {
   TextEditingController descriptionAddController = TextEditingController();
   TodoService todoservice = TodoService();
   List<TodoModel> todoList = [];
+  bool isLoading = false;
 
   Future<void> fetchTodo() async {
+    isLoading = true;
+    notifyListeners();
     try {
-      await Future.delayed(const Duration(seconds: 2));
       todoList = await todoservice.fetchTodo();
       notifyListeners();
     } catch (error) {
       log('Error on fetching Todo : $error');
       rethrow;
     }
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> addTodo() async {
@@ -26,28 +30,32 @@ class TodoProvider extends ChangeNotifier {
           title: titleAddController.text,
           description: descriptionAddController.text));
       notifyListeners();
+      titleAddController.clear();
+      descriptionAddController.clear();
+      await fetchTodo();
     } catch (error) {
       log('Error got while adding Todo :$error');
     }
   }
 
-  updateTodo(title, description, String id) async {
+  Future<void> updateTodo(title, description, String id) async {
     try {
       await todoservice.updateTodo(
           TodoModel(title: title, description: description), id);
-      fetchTodo();
+      await fetchTodo();
     } catch (error) {
       log('Error while updating :$error');
     }
   }
 
-  deleteTodo(String id) async {
+  Future<void> deleteTodo(String id) async {
     try {
       await todoservice.deleteTodo(id);
+      await fetchTodo();
       notifyListeners();
     } catch (error) {
       log('Error while deleting Todo : $error');
-      throw error;
+      rethrow;
     }
   }
 }

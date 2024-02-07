@@ -1,11 +1,24 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:api_todo_app/controller/todo_provider.dart';
 import 'package:api_todo_app/view/todo_add.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class TodoListScreen extends StatelessWidget {
+class TodoListScreen extends StatefulWidget {
   const TodoListScreen({super.key});
+
+  @override
+  State<TodoListScreen> createState() => _TodoListScreenState();
+}
+
+class _TodoListScreenState extends State<TodoListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<TodoProvider>(context, listen: false).fetchTodo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +37,6 @@ class TodoListScreen extends StatelessWidget {
           children: [
             Expanded(
                 child: Consumer<TodoProvider>(builder: (context, value, child) {
-              value.fetchTodo();
               return value.todoList.isEmpty
                   ? Center(
                       child: Lottie.asset('assets/Animation - empty list.json',
@@ -43,7 +55,7 @@ class TodoListScreen extends StatelessWidget {
                             subtitle: Text(todo.description.toString()),
                             trailing: PopupMenuButton(onSelected: (value) {
                               if (value == 'edit') {
-                                editScreen(
+                                updateAlertBox(
                                     context,
                                     todo.id,
                                     todo.title.toString(),
@@ -81,7 +93,7 @@ class TodoListScreen extends StatelessWidget {
     );
   }
 
-  editScreen(
+  updateAlertBox(
     context,
     id,
     String title,
