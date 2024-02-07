@@ -123,29 +123,32 @@ class _TodoListScreenState extends State<TodoListScreen> {
       builder: (context) {
         return AlertDialog(
           title: const Text("EDIT TODO"),
-          content: Column(
-            children: [
-              TextFormField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Title"),
-              ),
-              TextFormField(
-                controller: descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () {
-                  String newTitle = titleController.text.trim();
-                  String newDescription = descriptionController.text.trim();
-                  Provider.of<TodoProvider>(context, listen: false)
-                      .updateTodo(newTitle, newDescription, id);
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.update),
-                label: const Text("UPDATE"),
-              ),
-            ],
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: "Title"),
+                ),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(labelText: "Description"),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    String newTitle = titleController.text.trim();
+                    String newDescription = descriptionController.text.trim();
+                    Provider.of<TodoProvider>(context, listen: false)
+                        .updateTodo(newTitle, newDescription, id);
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.update),
+                  label: const Text("UPDATE"),
+                ),
+              ],
+            ),
           ),
         );
       },
